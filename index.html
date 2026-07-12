@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mohamed Slama — Data Analyst</title>
+  <meta name="description" content="Data Analyst portfolio — SQL, Looker Studio, Tableau, Excel. Built a 38,000-record compliance dashboard at Excelerate.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    :root {
+      --clr-bg: #0a0e17;
+      --clr-bg-alt: #0f1520;
+      --clr-bg-card: #141b2b;
+      --clr-bg-hover: #1a2340;
+      --clr-text: #e8edf5;
+      --clr-text-muted: #8892a8;
+      --clr-accent: #3b82f6;
+      --clr-accent2: #06b6d4;
+      --clr-accent-glow: rgba(59, 130, 246, 0.15);
+      --clr-green: #22c55e;
+      --clr-border: #1e293b;
+      --clr-border-light: #2a3a54;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+      --max-w: 1100px;
+      --nav-h: 64px;
+      --radius: 12px;
+      --radius-sm: 8px;
+      --transition: 0.25s ease;
+    }
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: var(--nav-h);
+    }
+    body {
+      font-family: var(--font);
+      background: var(--clr-bg);
+      color: var(--clr-text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+    button { cursor: pointer; font: inherit; border: none; background: none; color: inherit; }
+
+    .container {
+      width: 100%;
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .chip {
+      display: inline-block;
+      padding: 4px 14px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      border-radius: 100px;
+      background: rgba(59, 130, 246, 0.1);
+      color: var(--clr-accent);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+    }
+
+    .chip--green {
+      background: rgba(34, 197, 94, 0.1);
+      color: var(--clr-green);
+      border-color: rgba(34, 197, 94, 0.2);
+    }
+
+    /* ========== NAV ========== */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      height: var(--nav-h);
+      background: rgba(10, 14, 23, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--clr-border);
+      transition: background var(--transition);
+    }
+    .nav__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 100%;
+    }
+    .nav__logo {
+      font-size: 1.2rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      background: linear-gradient(135deg, var(--clr-accent), var(--clr-accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .nav__links {
+      display: flex;
+      gap: 24px;
+    }
+    .nav__link {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--clr-text-muted);
+      transition: color var(--transition);
+      position: relative;
+    }
+    .nav__link::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      right: 100%;
+      height: 2px;
+      background: var(--clr-accent);
+      transition: right var(--transition);
+    }
+    .nav__link:hover { color: var(--clr-text); }
+    .nav__link:hover::after { right: 0; }
+
+    .nav__toggle {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      padding: 4px;
+    }
+    .nav__toggle span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--clr-text);
+      border-radius: 2px;
+      transition: transform var(--transition), opacity var(--transition);
+    }
+    .nav__toggle--open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav__toggle--open span:nth-child(2) { opacity: 0; }
+    .nav__toggle--open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* ========== HERO ========== */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 100px 24px 60px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero__bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse at 20% 50%, rgba(59, 130, 246, 0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 30%, rgba(6, 182, 212, 0.04) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 80%, rgba(59, 130, 246, 0.03) 0%, transparent 50%);
+    }
+    .hero__bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%233b82f6' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .hero__content { position: relative; z-index: 1; max-width: 800px; }
+    .hero__chip { margin-bottom: 20px; }
+    .hero__name {
+      font-size: clamp(2.2rem, 7vw, 4.5rem);
+      font-weight: 900;
+      line-height: 1.05;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #f0f4ff 0%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero__title {
+      font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+      font-weight: 600;
+      color: var(--clr-accent);
+      margin-bottom: 16px;
+    }
+    .hero__sub {
+      font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+      color: var(--clr-text-muted);
+      max-width: 600px;
+      margin: 0 auto 32px;
+    }
+    .hero__cta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border-radius: var(--radius-sm);
+      transition: all var(--transition);
+      letter-spacing: 0.3px;
+    }
+    .btn--primary {
+      background: var(--clr-accent);
+      color: #fff;
+      box-shadow: 0 4px 16px var(--clr-accent-glow);
+    }
+    .btn--primary:hover {
+      background: #2563eb;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px var(--clr-accent-glow);
+    }
+    .btn--outline {
+      background: transparent;
+      border: 1.5px solid var(--clr-border-light);
+      color: var(--clr-text);
+    }
+    .btn--outline:hover {
+      border-color: var(--clr-accent);
+      color: var(--clr-accent);
+      background: rgba(59, 130, 246, 0.06);
+    }
+    .btn--secondary {
+      background: rgba(6, 182, 212, 0.1);
+      color: var(--clr-accent2);
+      border: 1px solid rgba(6, 182, 212, 0.2);
+    }
+    .btn--secondary:hover {
+      background: rgba(6, 182, 212, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .hero__stats {
+      display: flex;
+      gap: 32px;
+      justify-content: center;
+      margin-top: 48px;
+      flex-wrap: wrap;
+    }
+    .hero-stat {
+      text-align: center;
+    }
+    .hero-stat__num {
+      display: block;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--clr-accent);
+      font-family: var(--font-mono);
+    }
+    .hero-stat__label {
+      font-size: 0.8rem;
+      color: var(--clr-text-muted);
+      margin-top: 2px;
+    }
+
+    /* ========== SECTION ========== */
+    .section {
+      padding: 80px 0;
+    }
+    .section--alt {
+      background: var(--clr-bg-alt);
+    }
+    .section__header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+    .section__label {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--clr-accent);
+      margin-bottom: 8px;
+      font-family: var(--font-mono);
+    }
+    .section__title {
+      font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+    .section__sub {
+      font-size: 1rem;
+      color: var(--clr-text-muted);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* ========== SKILLS ========== */
+    .skills__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+    }
+    .skill-tag {
+      background: var(--clr-bg-card);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius-sm);
+      padding: 16px 20px;
+      text-align: center;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all var(--transition);
+    }
+    .skill-tag:hover {
+      border-color: var(--clr-accent);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    }
+    .skill-tag__icon {
+      font-size: 1.4rem;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    /* ========== PROJECTS ========== */
+    .projects__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
+    }
+    .project-card {
+      background: var(--clr-bg-card);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius);
+      padding: 28px;
+      transition: all var(--transition);
+      display: flex;
+      flex-direction: column;
+    }
+    .project-card:hover {
+      border-color: var(--clr-accent);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+    }
+    .project-card__tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+    .project-card__tag {
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 100px;
+      background: rgba(59, 130, 246, 0.08);
+      color: var(--clr-accent);
+      border: 1px solid rgba(59, 130, 246, 0.15);
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+    }
+    .project-card__tag--green {
+      background: rgba(34, 197, 94, 0.08);
+      color: var(--clr-green);
+      border-color: rgba(34, 197, 94, 0.15);
+    }
+    .project-card__title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .project-card__desc {
+      font-size: 0.88rem;
+      color: var(--clr-text-muted);
+      line-height: 1.6;
+      margin-bottom: 16px;
+      flex: 1;
+    }
+    .project-card__links {
+      display: flex;
+      gap: 16px;
+    }
+    .project-card__link {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--clr-accent);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: opacity var(--transition);
+    }
+    .project-card__link:hover { opacity: 0.7; }
+
+    /* ========== EXPERIENCE ========== */
+    .timeline {
+      position: relative;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 20px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--clr-border-light);
+    }
+    .timeline__item {
+      position: relative;
+      padding-left: 56px;
+      padding-bottom: 36px;
+    }
+    .timeline__item:last-child { padding-bottom: 0; }
+    .timeline__dot {
+      position: absolute;
+      left: 12px;
+      top: 4px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--clr-accent);
+      border: 4px solid var(--clr-bg);
+      box-shadow: 0 0 0 2px var(--clr-accent);
+    }
+    .timeline__date {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--clr-accent);
+      font-family: var(--font-mono);
+      margin-bottom: 4px;
+    }
+    .timeline__title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .timeline__org {
+      font-size: 0.88rem;
+      color: var(--clr-accent2);
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+    .timeline__desc {
+      font-size: 0.85rem;
+      color: var(--clr-text-muted);
+      line-height: 1.7;
+    }
+    .timeline__desc strong { color: var(--clr-text); font-weight: 600; }
+
+    /* ========== CONTACT FORM ========== */
+    .contact__form {
+      max-width: 560px;
+      margin: 0 auto;
+      background: var(--clr-bg-card);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius);
+      padding: 36px;
+    }
+    .form__group {
+      margin-bottom: 16px;
+    }
+    .form__group label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--clr-text-muted);
+      margin-bottom: 6px;
+    }
+    .form__group input,
+    .form__group textarea {
+      width: 100%;
+      padding: 12px 16px;
+      font-size: 0.95rem;
+      font-family: var(--font);
+      background: var(--clr-bg);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius-sm);
+      color: var(--clr-text);
+      outline: none;
+      transition: border-color var(--transition);
+    }
+    .form__group input:focus,
+    .form__group textarea:focus {
+      border-color: var(--clr-accent);
+      box-shadow: 0 0 0 3px var(--clr-accent-glow);
+    }
+    .form__group textarea {
+      resize: vertical;
+      min-height: 110px;
+    }
+    .form__status {
+      text-align: center;
+      padding: 10px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      border-radius: var(--radius-sm);
+      margin-top: 12px;
+      display: none;
+    }
+    .form__status--success {
+      background: rgba(34, 197, 94, 0.1);
+      color: var(--clr-green);
+      border: 1px solid rgba(34, 197, 94, 0.2);
+      display: block;
+    }
+    .form__status--error {
+      background: rgba(239, 68, 68, 0.1);
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      display: block;
+    }
+
+    /* ========== FOOTER ========== */
+    .footer {
+      border-top: 1px solid var(--clr-border);
+      padding: 32px 0;
+      text-align: center;
+    }
+    .footer__social {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+    .footer__social a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--clr-bg-card);
+      border: 1px solid var(--clr-border);
+      color: var(--clr-text-muted);
+      transition: all var(--transition);
+    }
+    .footer__social a:hover {
+      border-color: var(--clr-accent);
+      color: var(--clr-accent);
+      transform: translateY(-2px);
+    }
+    .footer__copy {
+      font-size: 0.8rem;
+      color: var(--clr-text-muted);
+    }
+
+    /* ========== REVEAL ========== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal--visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ========== RESPONSIVE ========== */
+    @media (max-width: 768px) {
+      .nav__links {
+        position: fixed;
+        top: var(--nav-h);
+        left: 0;
+        right: 0;
+        background: rgba(10, 14, 23, 0.98);
+        backdrop-filter: blur(12px);
+        flex-direction: column;
+        padding: 24px;
+        gap: 16px;
+        transform: translateY(-120%);
+        opacity: 0;
+        transition: all var(--transition);
+        border-bottom: 1px solid var(--clr-border);
+        z-index: 999;
+      }
+      .nav__links--open {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      .nav__link { font-size: 1rem; padding: 8px 0; }
+      .nav__toggle { display: flex; }
+      .hero__stats { gap: 20px; }
+      .projects__grid { grid-template-columns: 1fr; }
+      .skills__grid { grid-template-columns: repeat(2, 1fr); }
+      .section { padding: 56px 0; }
+      .contact__form { padding: 24px; }
+    }
+    @media (max-width: 480px) {
+      .hero__cta { flex-direction: column; }
+      .hero__cta .btn { width: 100%; justify-content: center; }
+      .skills__grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========== NAV ========== -->
+  <nav class="nav" role="navigation">
+    <div class="container nav__inner">
+      <a href="#" class="nav__logo">MS.</a>
+      <div class="nav__links" id="navLinks">
+        <a href="#skills" class="nav__link">Skills</a>
+        <a href="#projects" class="nav__link">Projects</a>
+        <a href="#experience" class="nav__link">Experience</a>
+        <a href="#contact" class="nav__link">Contact</a>
+      </div>
+      <button class="nav__toggle" id="navToggle" aria-label="Menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <main>
+    <!-- ========== HERO ========== -->
+    <section class="hero" id="hero">
+      <div class="hero__bg"></div>
+      <div class="hero__content">
+        <div class="hero__chip"><span class="chip chip--green">Open to Work</span></div>
+        <h1 class="hero__name">Mohamed Slama</h1>
+        <p class="hero__title">Data Analyst &middot; SQL &middot; Looker Studio &middot; Tableau</p>
+        <p class="hero__sub">
+          Management Science student at IHEC Sousse. Built a 38,000-record compliance dashboard at Excelerate.
+          Turning raw data into clear decisions.
+        </p>
+        <div class="hero__cta">
+          <a href="#projects" class="btn btn--primary">View Projects</a>
+          <a href="#contact" class="btn btn--outline">Contact Me</a>
+          <a href="https://contra.com/mohamedslama" target="_blank" rel="noopener" class="btn btn--secondary">Contra &rarr;</a>
+        </div>
+        <div class="hero__stats">
+          <div class="hero-stat">
+            <span class="hero-stat__num">38K+</span>
+            <span class="hero-stat__label">Records Processed</span>
+          </div>
+          <div class="hero-stat">
+            <span class="hero-stat__num">14/14</span>
+            <span class="hero-stat__label">SQL Validations</span>
+          </div>
+          <div class="hero-stat">
+            <span class="hero-stat__num">4</span>
+            <span class="hero-stat__label">Projects Built</span>
+          </div>
+          <div class="hero-stat">
+            <span class="hero-stat__num">3</span>
+            <span class="hero-stat__label">Languages</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SKILLS ========== -->
+    <section id="skills" class="section section--alt">
+      <div class="container">
+        <div class="section__header reveal">
+          <span class="section__label">Skills</span>
+          <h2 class="section__title">Tools &amp; Technologies</h2>
+          <p class="section__sub">What I use to turn data into insights</p>
+        </div>
+        <div class="skills__grid">
+          <div class="skill-tag reveal"><span class="skill-tag__icon">🗃️</span>SQL / PostgreSQL</div>
+          <div class="skill-tag reveal"><span class="skill-tag__icon">📊</span>Looker Studio</div>
+          <div class="skill-tag reveal"><span class="skill-tag__icon">📈</span>Tableau</div>
+          <div class="skill-tag reveal"><span class="skill-tag__icon">📉</span>Excel / Pivot Tables</div>
+          <div class="skill-tag reveal"><span class="skill-tag__icon">🧹</span>Data Cleaning</div>
+          <div class="skill-tag reveal"><span class="skill-tag__icon">📐</span>Statistical Analysis</div>
+          <div class="skill-tag reveal"><span class="skill-tag__icon">🗄️</span>Supabase</div>
+          <div class="skill-tag reveal"><span class="skill-tag__icon">📋</span>R (Basic)</div>
+          <div class="skill-tag reveal"><span class="skill-tag__icon">🖥️</span>Next.js / TypeScript</div>
+          <div class="skill-tag reveal"><span class="skill-tag__icon">🌍</span>Arabic &middot; French &middot; English</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== PROJECTS ========== -->
+    <section id="projects" class="section">
+      <div class="container">
+        <div class="section__header reveal">
+          <span class="section__label">Projects</span>
+          <h2 class="section__title">Recent Work</h2>
+          <p class="section__sub">Dashboards, data pipelines, and web apps I've built</p>
+        </div>
+        <div class="projects__grid">
+
+          <div class="project-card reveal">
+            <div class="project-card__tags">
+              <span class="project-card__tag">SQL</span>
+              <span class="project-card__tag">Supabase</span>
+              <span class="project-card__tag">Looker Studio</span>
+              <span class="project-card__tag project-card__tag--green">38K Records</span>
+            </div>
+            <h3 class="project-card__title">SLU Compliance Dashboard</h3>
+            <p class="project-card__desc">
+              Built a live compliance dashboard processing <strong>38,000+ international student records</strong>
+              with SQL/Supabase backend and Looker Studio frontend. Passed all <strong>14/14 SQL validation
+              checks</strong>. Remote project at Excelerate (June 2026).
+            </p>
+            <div class="project-card__links">
+              <a href="https://github.com/hammaslama16-jpg/slu-compliance-dashboard" target="_blank" rel="noopener" class="project-card__link">Source &rarr;</a>
+            </div>
+          </div>
+
+          <div class="project-card reveal">
+            <div class="project-card__tags">
+              <span class="project-card__tag">Next.js</span>
+              <span class="project-card__tag">TypeScript</span>
+              <span class="project-card__tag">Tailwind</span>
+              <span class="project-card__tag">Arabic/FR/EN</span>
+            </div>
+            <h3 class="project-card__title">Halwiyat Latifa — Pastry Shop</h3>
+            <p class="project-card__desc">
+              Trilingual (Arabic/French/English) RTL e-commerce site for a Tunisian pastry business.
+              WhatsApp ordering, dark mode, Framer Motion animations, deployed on Vercel.
+            </p>
+            <div class="project-card__links">
+              <a href="https://halawiyat-latifa.vercel.app" target="_blank" rel="noopener" class="project-card__link">Live site &rarr;</a>
+              <a href="https://github.com/hammaslama16-jpg/halawiyat-latifa" target="_blank" rel="noopener" class="project-card__link">Source &rarr;</a>
+            </div>
+          </div>
+
+          <div class="project-card reveal">
+            <div class="project-card__tags">
+              <span class="project-card__tag">React</span>
+              <span class="project-card__tag">Supabase</span>
+              <span class="project-card__tag">Paddle</span>
+              <span class="project-card__tag">SaaS</span>
+            </div>
+            <h3 class="project-card__title">AI Brand Monitor</h3>
+            <p class="project-card__desc">
+              SaaS app for real-time brand monitoring and sentiment analysis. Supabase auth,
+              subscription payments via Paddle, Edge Functions for webhook handling.
+            </p>
+            <div class="project-card__links">
+              <a href="https://ai-brand-monitor-nu.vercel.app" target="_blank" rel="noopener" class="project-card__link">Live site &rarr;</a>
+              <a href="https://github.com/hammaslama16-jpg/ai-brand-monitor" target="_blank" rel="noopener" class="project-card__link">Source &rarr;</a>
+            </div>
+          </div>
+
+          <div class="project-card reveal">
+            <div class="project-card__tags">
+              <span class="project-card__tag">HTML/CSS</span>
+              <span class="project-card__tag">Bilingual</span>
+              <span class="project-card__tag">Responsive</span>
+            </div>
+            <h3 class="project-card__title">Métal Concept Messadine</h3>
+            <p class="project-card__desc">
+              Bilingual (French/Arabic) business website for a metal construction company in Sousse.
+              Gallery with lightbox, Google Maps, WhatsApp integration, mobile-first dark theme.
+            </p>
+            <div class="project-card__links">
+              <a href="https://github.com/hammaslama16-jpg/artmetal-website" target="_blank" rel="noopener" class="project-card__link">Source &rarr;</a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== EXPERIENCE ========== -->
+    <section id="experience" class="section section--alt">
+      <div class="container">
+        <div class="section__header reveal">
+          <span class="section__label">Experience</span>
+          <h2 class="section__title">Where I've Worked</h2>
+        </div>
+        <div class="timeline">
+          <div class="timeline__item reveal">
+            <div class="timeline__dot"></div>
+            <div class="timeline__date">June 2026</div>
+            <div class="timeline__title">Data Visualization Associate</div>
+            <div class="timeline__org">Excelerate — Remote (1 month)</div>
+            <div class="timeline__desc">
+              Built an <strong>SLU international student compliance dashboard</strong> processing
+              <strong>38,000+ records</strong>. Used SQL, Supabase, PostgreSQL, and Looker Studio for
+              live dashboard delivery. Passed <strong>14/14 SQL validation checks</strong>.
+            </div>
+          </div>
+          <div class="timeline__item reveal">
+            <div class="timeline__dot"></div>
+            <div class="timeline__date">Aug – Sep 2024</div>
+            <div class="timeline__title">Accounting Intern</div>
+            <div class="timeline__org">La Compagnie des Comptables de Tunisie — Sousse</div>
+            <div class="timeline__desc">
+              Accounting internship with exposure to financial data processing and reporting.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== CONTACT ========== -->
+    <section id="contact" class="section">
+      <div class="container">
+        <div class="section__header reveal">
+          <span class="section__label">Contact</span>
+          <h2 class="section__title">Get In Touch</h2>
+          <p class="section__sub">Have a project or data you need analyzed? Send me a message.</p>
+        </div>
+
+        <div class="contact__form reveal" id="contactForm">
+          <div class="form__group">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" required placeholder="Your name">
+          </div>
+          <div class="form__group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required placeholder="you@example.com">
+          </div>
+          <div class="form__group">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" rows="4" required placeholder="Describe your project or data needs..."></textarea>
+          </div>
+          <button type="submit" class="btn btn--primary btn--block" id="submitBtn">Send Message</button>
+          <div class="form__status" id="formStatus"></div>
+        </div>
+
+        <div style="text-align:center; margin-top: 24px;">
+          <a href="mailto:hammaslama16@gmail.com" style="color:var(--clr-accent); font-weight:600;">hammaslama16@gmail.com</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__social">
+        <a href="https://github.com/hammaslama16-jpg" target="_blank" rel="noopener" aria-label="GitHub">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+        </a>
+        <a href="https://contra.com/mohamedslama" target="_blank" rel="noopener" aria-label="Contra">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15l-4-4 1.41-1.41L11 14.17l5.59-5.59L18 10l-7 7z"/></svg>
+        </a>
+        <a href="mailto:hammaslama16@gmail.com" aria-label="Email">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </a>
+      </div>
+      <p class="footer__copy">&copy; 2026 Mohamed Slama. Built with vanilla everything.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile nav toggle
+    const navToggle = document.getElementById('navToggle');
+    const navLinks = document.getElementById('navLinks');
+    navToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('nav__links--open');
+      navToggle.classList.toggle('nav__toggle--open');
+      navToggle.setAttribute('aria-expanded', navLinks.classList.contains('nav__links--open'));
+    });
+    document.querySelectorAll('.nav__link').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('nav__links--open');
+        navToggle.classList.remove('nav__toggle--open');
+        navToggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    // Scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('reveal--visible');
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // ========== SUPABASE CONTACT FORM ==========
+    // TODO: Replace with your Supabase anon key
+    // Get it from https://supabase.com/dashboard/project/ynrwbezrioihpusfnzfw/settings/api
+    const SUPABASE_URL = 'https://ynrwbezrioihpusfnzfw.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlucndiZXpyaW9paHB1c2ZuemZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEyMDA1MzIsImV4cCI6MjA5Njc3NjUzMn0.ZkOXEfM0IyN_e0MmJPcR_N7xQFfdvaiaiBgiFcYYz4E';
+
+    const form = document.getElementById('contactForm');
+    const status = document.getElementById('formStatus');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      btn.textContent = 'Sending...';
+      status.className = 'form__status';
+
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const message = document.getElementById('message').value.trim();
+
+      if (!name || !email || !message) {
+        status.textContent = 'Please fill in all fields.';
+        status.className = 'form__status form__status--error';
+        btn.disabled = false;
+        btn.textContent = 'Send Message';
+        return;
+      }
+
+      if (SUPABASE_ANON_KEY === 'YOUR_SUPABASE_ANON_KEY_HERE') {
+        status.innerHTML = 'Supabase not configured yet. Email me directly at <strong>hammaslama16@gmail.com</strong>';
+        status.className = 'form__status form__status--error';
+        btn.disabled = false;
+        btn.textContent = 'Send Message';
+        return;
+      }
+
+      try {
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/contacts`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+            'Prefer': 'return=minimal'
+          },
+          body: JSON.stringify({ name, email, message })
+        });
+
+        if (res.ok || res.status === 201) {
+          status.textContent = 'Message sent! I will get back to you soon.';
+          status.className = 'form__status form__status--success';
+          form.reset();
+        } else {
+          throw new Error('Failed to send');
+        }
+      } catch (err) {
+        status.textContent = 'Could not send message. Email me at hammaslama16@gmail.com';
+        status.className = 'form__status form__status--error';
+      }
+
+      btn.disabled = false;
+      btn.textContent = 'Send Message';
+    });
+  </script>
+</body>
+</html>
